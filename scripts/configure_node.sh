@@ -25,7 +25,11 @@ sudo apt-get install -y kubectl kubelet kubeadm
 #systemctl enable docker.service
 #swapoff -a
 
-sudo snap install cmake --classic
+cd $my_dir
+cmake_ver=3.24.3
+wget https://github.com/Kitware/CMake/releases/download/v$cmake_ver/cmake-$cmake_ver.tar.gz && tar -xvzf cmake-$cmake_ver.tar.gz
+cd cmake-$cmake_ver && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make && make install
+cd .. && rm -rf cmake-*
 cmake --version
 
 cd $my_dir
