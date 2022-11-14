@@ -49,8 +49,8 @@ cd $my_dir
 mkdir k8s
 cd k8s
 curl -sL https://run.linkerd.io/install | sh
-curl https://docs.projectcalico.org/manifests/calico.yaml -O
-wget https://raw.githubusercontent.com/UmakantKulkarni/myCodes/master/k8/metrics-server.yaml
+curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
+#wget https://raw.githubusercontent.com/UmakantKulkarni/myCodes/master/k8/metrics-server.yaml
 
 cd $my_dir
 git clone https://github.com/UmakantKulkarni/Secure5G
@@ -96,3 +96,41 @@ git clone -b v0.6.7 https://github.com/free5gc/gtp5g.git
 cd gtp5g
 make
 make install
+
+
+#Kubernetes & containerd specific config
+
+sudo tee /etc/modules-load.d/k8s.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+# Enable kernel modules
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+# Add some settings to sysctl
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+# Reload sysctl
+sudo sysctl --system
+
+# Add Docker repo
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# Install containerd
+sudo apt update
+sudo apt install -y containerd.io
+
+mkdir -p /etc/containerd
+containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
+sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+
+# restart containerd
+sudo systemctl restart containerd
+sudo systemctl enable containerd
