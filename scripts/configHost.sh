@@ -50,7 +50,7 @@ mkdir k8s
 cd k8s
 curl -sL https://run.linkerd.io/install | sh
 curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
-#wget https://raw.githubusercontent.com/UmakantKulkarni/myCodes/master/k8/metrics-server.yaml
+wget https://raw.githubusercontent.com/UmakantKulkarni/myCodes/master/k8/metrics-server.yaml
 
 cd $my_dir
 git clone https://github.com/UmakantKulkarni/Secure5G
