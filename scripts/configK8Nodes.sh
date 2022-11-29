@@ -7,7 +7,7 @@ fi
 
 intf="$1"
 masterNode="02"
-declare -a workerNodes=("08" "09" "10" "11" "12" "14" "16" "17" "18")
+declare -a workerNodes=("08" "09" "11" "12" "14" "16" "17" "18")
 declare -a ranNodes=("21" "27")
 
 #https://computingforgeeks.com/deploy-kubernetes-cluster-on-ubuntu-with-kubeadm/
@@ -28,7 +28,7 @@ kjoincmdorig="kubeadm token create --print-join-command"
 kjoincmd=$(sshpass -p $MYPASSWD ssh -o StrictHostKeyChecking=no root@cap$masterNode "$kjoincmdorig")
 
 echo ""
-echo "Finished Configuring Master Node. Sleep for 120 seconds..."
+echo "Finished Configuring Master Node. Sleep for 60 seconds..."
 echo ""
 
 sleep 60
