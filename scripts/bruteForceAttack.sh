@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+smf_ip=$1
+END=20
+for i in $(seq 1 $END);
+do	
+	# Execute from AMF node:
+    curl -v --request POST -d '{"ueLocation":{"nrLocation":{"tai":{"plmnId":{"mcc":"208","mnc":"93"},"tac":"000001"},"ncgi":{"plmnId":{"mcc":"208","mnc":"93"},"nrCellId":"000000010"},"ueLocationTimestamp":"2022-11-30T03:19:48.206301Z"}},"ueTimeZone":"-05:00"}' -H "Content-Type: application/json" --http2-prior-knowledge  -A "AMF" http://$smf_ip/nsmf-pdusession/v1/sm-contexts/$i/release
+    echo $op >> /tmp/uk1.txt
+    echo " " /tmp/uk1.txt
+done
