@@ -28,10 +28,10 @@ kjoincmdorig="kubeadm token create --print-join-command"
 kjoincmd=$(sshpass -p $MYPASSWD ssh -o StrictHostKeyChecking=no root@cap$masterNode "$kjoincmdorig")
 
 echo ""
-echo "Finished Configuring Master Node. Sleep for 60 seconds..."
+echo "Finished Configuring Master Node. Sleep for 30 seconds..."
 echo ""
 
-sleep 60
+sleep 30
 
 echo ""
 echo "Configuring Worker Nodes with command - $kjoincmd"

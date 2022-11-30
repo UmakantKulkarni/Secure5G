@@ -32,6 +32,18 @@ cd /opt/k8s && kubectl create -f metrics-server.yaml
 kubectl get pods -A
 kjoincmd=$(kubeadm token create --print-join-command)
 
+sleep 30
+
+# mTLS Working - https://istio.io/latest/docs/ops/configuration/traffic-management/tls-configuration/
+# Install Inject and uninstall istio
+# https://istio.io/latest/docs/setup/getting-started/
+cd /opt
+curl -L https://istio.io/downloadIstio | sh -
+cd istio-1.16.0
+echo "export PATH=$PWD/bin:$PATH" >> ~/.bashrc
+export PATH=$PWD/bin:$PATH
+istioctl install --set profile=demo -y
+
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 echo "alias k='kubectl'" >> ~/.bashrc
 echo "alias kp='kubectl get pods --all-namespaces'" >> ~/.bashrc
