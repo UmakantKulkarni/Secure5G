@@ -42,7 +42,6 @@ curl -L https://istio.io/downloadIstio | sh -
 cd istio-1.16.0
 echo "export PATH=$PWD/bin:$PATH" >> ~/.bashrc
 export PATH=$PWD/bin:$PATH
-istioctl install --set profile=demo -y
 
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 echo "alias k='kubectl'" >> ~/.bashrc

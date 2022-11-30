@@ -12,6 +12,7 @@ sleep 30
 kubectl delete pv mongodb-pv-volume-open5gs
 sleep 30
 
+istioctl install --set profile=demo -y
 kubectl create namespace open5gs
 kubectl label namespace open5gs istio-injection=enabled
 
