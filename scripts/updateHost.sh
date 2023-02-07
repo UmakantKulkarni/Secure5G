@@ -10,6 +10,6 @@ sudo apt-get update
 cd $mydir
 wget https://github.com/davidfoerster/aptsources-cleanup/releases/download/v0.1.7.5.2/aptsources-cleanup.pyz
 chmod a+x aptsources-cleanup.pyz
-all | ./aptsources-cleanup.pyz -y
+yes | ./aptsources-cleanup.pyz -y
 
 apt-get -y update && apt-get -y upgrade && apt-get -y update && apt-get -y dist-upgrade
