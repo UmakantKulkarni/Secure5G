@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -lt 1 ]; then
 	echo "Expected at least 1 CLI argument - Interface name"
     exit 1
+elif [ "$#" -eq 1 ]; then
+	repeatFlag="1"
+	echo "repeatFlag is $repeatFlag"
+elif [ "$#" -eq 2 ]; then
+	repeatFlag="$2"
+	echo "repeatFlag is $repeatFlag"
 fi
 
 intf="$1"
@@ -22,7 +28,7 @@ echo ""
 echo "Configuring Master Node"
 echo ""
 
-mcmd="cd /opt/Secure5G/ && git pull && bash /opt/Secure5G/scripts/configMasterNode.sh $intf"
+mcmd="cd /opt/Secure5G/ && git pull && bash /opt/Secure5G/scripts/configMasterNode.sh $intf $repeatFlag"
 sshpass -p $MYPASSWD ssh -o StrictHostKeyChecking=no root@cap$masterNode "$mcmd"
 kjoincmdorig="kubeadm token create --print-join-command"
 kjoincmd=$(sshpass -p $MYPASSWD ssh -o StrictHostKeyChecking=no root@cap$masterNode "$kjoincmdorig")
@@ -38,7 +44,7 @@ echo "Configuring Worker Nodes with command - $kjoincmd"
 echo ""
 
 
-wcmd="cd /opt/Secure5G/ && git pull && bash /opt/Secure5G/scripts/configWorkerNode.sh \"$kjoincmd\" && exit"
+wcmd="cd /opt/Secure5G/ && git pull && bash /opt/Secure5G/scripts/configWorkerNode.sh $repeatFlag \"$kjoincmd\" && exit"
 for nodeNum in "${workerNodes[@]}"
 do	
 	node=cap$nodeNum
@@ -55,23 +61,25 @@ echo ""
 echo "Finished Configuring Worker Nodes"
 echo ""
 
-echo ""
-echo "Started Configuring RAN Nodes"
-echo ""
+if [ $repeatFlag = "0" ] ; then
+	echo ""
+	echo "Started Configuring RAN Nodes"
+	echo ""
 
-rcmd="cd /opt/Secure5G/ && git pull && bash /opt/Secure5G/scripts/configRanNode.sh && exit"
-for nodeNum in "${ranNodes[@]}"
-do	
-	node=cap$nodeNum
-	echo ""
-	echo "Configuring Node - $node"
-	echo ""
-	sshpass -p $MYPASSWD ssh -o StrictHostKeyChecking=no root@$node "$rcmd"
-	echo ""
-	echo "Finished Configuring RAN Node - $node"
-    echo ""
-done
+	rcmd="cd /opt/Secure5G/ && git pull && bash /opt/Secure5G/scripts/configRanNode.sh && exit"
+	for nodeNum in "${ranNodes[@]}"
+	do	
+		node=cap$nodeNum
+		echo ""
+		echo "Configuring Node - $node"
+		echo ""
+		sshpass -p $MYPASSWD ssh -o StrictHostKeyChecking=no root@$node "$rcmd"
+		echo ""
+		echo "Finished Configuring RAN Node - $node"
+		echo ""
+	done
 
-echo ""
-echo "Finished Configuring RAN Nodes"
-echo ""
+	echo ""
+	echo "Finished Configuring RAN Nodes"
+	echo ""
+fi

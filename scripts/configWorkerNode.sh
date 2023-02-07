@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 
-if [[ $# -ne 1 ]] ; then
-    echo 'Expected 1 CLI argument - Kubernetes join command'
+if [ "$#" -lt 2 ]; then
+    echo 'Expected 2 CLI arguments - Kubernetes join command & repeat flag'
     exit 1
 fi
 
-kjoincmd="$1"
+repeatFlag="$1"
+kjoincmd="$2"
 echo "export GOPATH=$HOME/go" >> ~/.bashrc
 echo "export GOROOT=/usr/local/go" >> ~/.bashrc
 echo "export GO111MODULE=auto" >> ~/.bashrc
 echo "export PCS_SETUP_TUN_INTF=true" >> ~/.bashrc
 source ~/.bashrc
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
-curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
+if [ $repeatFlag = "0" ] ; then
+    curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
+fi
 systemctl enable docker.service
 swapoff -a
 echo '{"exec-opts": ["native.cgroupdriver=systemd"]}' | jq . > /etc/docker/daemon.json
