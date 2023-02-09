@@ -25,9 +25,9 @@ fi
 
 Hostname=$(hostname)
 if [ "$Hostname" = "wabash" ] ; then
-    cd /home/ukulkarn/opensource-5g-core/helm-chart/ 
+    cd /home/ukulkarn/opensource-5g-core/helm-chart/
 else
-    cd /opt/opensource-5g-core/helm-chart/ 
+    cd /opt/opensource-5g-core/helm-chart/
 fi
 helm -n open5gs install -f values.yaml 5gcore ./
 sleep 10
@@ -37,13 +37,13 @@ if [[ $istio_enabled -eq 1 ]] ; then
     # Enable mTLS strict mode
     # https://istio.io/latest/docs/tasks/security/authentication/mtls-migration/#lock-down-to-mutual-tls-by-namespace
     # In case we want to enable it globally - https://istio.io/latest/docs/tasks/security/authentication/authn-policy/#globally-enabling-istio-mutual-tls-in-strict-mode
-    kubectl apply -n open5gs -f - <<-EOF
+kubectl apply -n open5gs -f - <<EOF
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
-name: "default"
+  name: "default"
 spec:
-mtls:
+  mtls:
     mode: STRICT
 EOF
 fi
